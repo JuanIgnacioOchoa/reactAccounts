@@ -1,0 +1,143 @@
+table tr:hover{
+    background-color: #D0D9FE;
+}
+
+svg {
+    color: red;
+}
+
+.iconos :hover{
+    color: yellow;
+}
+.iconos {
+    display: inline-block;
+    padding-left: 2%;
+}
+.dash {
+    padding-top: 75px
+}
+.dash-header{
+    text-align: center;
+}
+.date-picker{
+    text-align: center;
+}
+.columnMov, .actionBtns {
+    max-width: 300px;
+}
+.actionBtns{
+    text-align: center
+}
+.columnMovMon{
+    max-width: 300px;
+    border-left: none
+}
+.columnMovCant{
+    max-width: 300px;
+    border-right: none
+}
+.dateRow :hover {
+    background-color: white
+}
+table thead tr{
+    display:block;
+}
+table thead :hover{
+    background-color: white
+}
+th, td {
+  border: 1px solid black;
+  width: 6%;
+}
+table tbody{
+  display:block;
+  height: 80vh;
+  overflow:auto;
+}
+table tbody, table thead{
+    width: 100%
+}
+.mainBtn{
+    position:fixed;
+    width:60px;
+	height:60px;
+	bottom:40px;
+    right:40px;
+    background-color: rebeccapurple;
+	color:white;
+	border-radius:50px;
+    z-index: 999;
+    text-align: center;
+}
+.menuBtnDesc {
+    position:fixed;
+    display: none;
+    background-color: blue;
+    opacity: 0.8;
+	color:white;
+    z-index: 999;
+    border-radius: 10px
+}
+.menuBtn1 {
+    bottom: 50px;
+    position:fixed;
+    display: table;
+    width:40px;
+	height:40px;
+    right:50px;
+    background-color: greenyellow;
+	color:white;
+	border-radius:50px;
+    z-index: 999;
+}
+.menuBtn2 {
+    padding-left: 3px;
+    position:fixed;
+    width:40px;
+	height:40px;
+	bottom:50px;
+    right:50px;
+    background-color: red;
+	color:white;
+	border-radius:50px;
+    z-index: 999;
+    align-items: center;
+    display: flex;
+}
+.menuBtn3 {
+    position:fixed;
+    display: table;
+    width:40px;
+	height:40px;
+	bottom:50px;
+    right:50px;
+    background-color: aquamarine;
+	color:white;
+	border-radius:50px;
+    z-index: 999;
+}
+.menuBtn1:hover ~ #desc1{
+    display: inline;
+}
+.menuBtn2:hover ~ #desc2{
+    display: inline;
+}
+.menuBtn3:hover ~ #desc3{
+    display: inline;
+}
+/*
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    z-index: 999;
+    cursor: pointer;
+    color: #016fb9;
+    opacity: 1.0;
+*/
+/*
+.float svg{
+    color: #0C9;
+    width:60px;
+	height:60px;
+}
+*/
