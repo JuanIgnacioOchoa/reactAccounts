@@ -67,6 +67,7 @@ async function createAllFileAppData(accessToken){
                     return reject(err)
                 })
             })
+            await fs.unlinkSync('./../../dbjson/' + name)
             resolve('Created C')
         })
         resolve('Created')
