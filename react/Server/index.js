@@ -7,6 +7,7 @@ const passport = require('passport')
 const sqlite3 = require('sqlite3')
 const keys = require('./config/keys')
 const dbName = './databases/Account-116307006854202796538.sqlite'
+const updates = require('./DataBase/updates')
 
 require('./services/passport')
 
@@ -366,13 +367,7 @@ app.post('/updateMove/:id', (req, res, next) => {
         Traspaso = ${item.IdTraspaso}, comment = '${item.comment}', IdViaje = ${item.IdViaje} 
         where _id = ${id}`
     )
-    query.push(`
-      UPDATE AccountsConfig SET Value = CURRENT_TIMESTAMP Where _id = 1
-    `)
-    query.push(`
-      UPDATE AccountsConfig SET Value = CURRENT_TIMESTAMP Where _id = 2
-    `)
-    query
+    
     db.serialize(function() {
       var stmt
       query.forEach((q) => {
@@ -392,6 +387,7 @@ app.post('/updateMove/:id', (req, res, next) => {
     db.close()
     res.send({status: "error"})
   }
+  updates.updateLastUpdate(db);
   console.log('close')
   db.close()
   res.send({status: "success"})
@@ -416,12 +412,6 @@ app.post('/AgregarMovimiento', (req, res, next) => {
       UPDATE AccountsTotales set CurrentCantidad = CurrentCantidad + ${mov.cantidad * mov.cambio} WHERE _id = ${mov.cuenta}
     `)
   }
-  query.push(`
-    UPDATE AccountsConfig SET Value = CURRENT_TIMESTAMP Where _id = 1
-  `)
-  query.push(`
-    UPDATE AccountsConfig SET Value = CURRENT_TIMESTAMP Where _id = 2
-  `)
 
   db.serialize(function() {
     var stmt
@@ -447,6 +437,7 @@ app.post('/AgregarMovimiento', (req, res, next) => {
       console.log(`A row has been inserted with rowid ${this.lastID}`);
     });
     */
+  updates.updateLastUpdate(db);
   console.log('close')
   db.close()
   res.send({status: "success"})

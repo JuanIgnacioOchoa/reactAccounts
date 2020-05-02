@@ -15,20 +15,23 @@ module.exports = (app) => {
         '/auth/google/callback', 
         passport.authenticate('google'),
         (req, res) => {
+            //drive.listAppDataFolder(req.user.accessToken)
+            //drive.deleteAllAppDataFolder(req.user.accessToken)
+            //drive.listAppDataFolder(req.user.accessToken)
             
-            drive.getAppDataFolderName(req.user.accessToken, 'AccountsConfig.json')
+            drive.getAppDataFolderName(req.user.accessToken, 'AccountsConfig')
             .then(response => {
                 console.log('holi json', response)
                 if(response != 'created'){
                     const db = new sqlite3.Database(dbName)
                     const a = db.all('SELECT * FROM AccountsConfig', (err, rows) => {
                         if(err == null){
-                            console.log('ro', rows.length) 
-                            //console.log('re', response[1])
+                            console.log('ro', rows) 
+                            console.log('re', response)
                             if(rows.length <= 0){ 
                                 drive.reemplazarAllBDConFriveFiles(db, req.user.accessToken)
                                 .then(response => {
-                                    console.log('holi success', response)
+                                    console.log('holi success 1', response)
                                     res.redirect('/')
                                 })
                                 .catch(err => {
@@ -44,12 +47,12 @@ module.exports = (app) => {
                                 console.log('Sync:  :', localLastSync, driveLastSync, localLastSync == driveLastSync)
                                 
                                 //if(true){
-                                if(false){
-                                //if(localLastUpdate < driveLastUpdate){
+                                //if(false){
+                                if(localLastUpdate < driveLastUpdate){
                                     //TODO reemplazar bd local con la del drive PROBADO
                                     drive.reemplazarAllBDConFriveFiles(db, req.user.accessToken)
                                     .then(response => {
-                                        console.log('holi success', response)
+                                        console.log('holi success 2', response)
                                         res.redirect('/')
                                     })
                                     .catch(err => {
@@ -57,8 +60,8 @@ module.exports = (app) => {
                                         res.redirect('/error')
                                     })
 
-                                } else if(false){
-                                //} else if(localLastUpdate === driveLastUpdate){
+                                //} else if(false){
+                                } else if(localLastUpdate === driveLastUpdate){
                                     res.redirect('/')
                                 } else {
                                     //TODO actualizar bd de drive con la local
@@ -87,6 +90,7 @@ module.exports = (app) => {
                 console.log('holi json err: ', err)
                 res.redirect('/error', 404)
             })
+            
         }
     )
 

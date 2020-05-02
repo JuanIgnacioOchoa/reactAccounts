@@ -49,25 +49,26 @@ async function createAllFileAppData(accessToken){
         {    
             await asyncForEach(data, async d => {
                 await sleep()
-                const name = tables[c].name + '.json'
-                c ++
+                const name = tables[c].name + "tmp" + Math.floor(Math.random() * Math.floor(1000000)) + '.json'
+                
                 const json = JSON.stringify(d)
                 await fs.writeFileSync('./../../dbjson/' + name, json)
                 //.catch(err => {return reject(err)})
                 var fileMetadata = {
-                    'name': name,
+                    'name': tables[c].name,
                     'parents': ['appDataFolder']
                 };
                 var media = {
                     mimeType: 'application/json',
                     body: fs.createReadStream('./../../dbjson/' + name)
                 };
-                const x = await createDriveFile(drive, fileMetadata, name, media)
+                const x = await createDriveFile(drive, fileMetadata, tables[c].name, media)
                 .catch(err => {
                     return reject(err)
                 })
+                c ++ 
+                await fs.unlinkSync('./../../dbjson/' + name)
             })
-            await fs.unlinkSync('./../../dbjson/' + name)
             resolve('Created C')
         })
         resolve('Created')
@@ -114,7 +115,7 @@ function listAppDataFolder(accessToken){
     drive.files.list({
         spaces: 'appDataFolder',
         fields: 'nextPageToken, files(id, name)',
-        pageSize: 15,
+        pageSize: 150,
       }, function (err, res) {
         if (err) {
             // Handle error
@@ -122,7 +123,7 @@ function listAppDataFolder(accessToken){
         } else {
             //console.log("size: ", res.data.files.length)
             res.data.files.forEach(function (file) {
-                //console.log('Found file:', file.name);
+                console.log('Found file:', file.name, 'Id: ', file.id);
                 //deleteAppDataFolder(drive, file.id)
                 //getAppDataFolder(drive, file.id, file.name)
             });
@@ -164,7 +165,7 @@ async function getAppDataFolderName(accessToken, name){
         drive.files.list({
             spaces: 'appDataFolder',
             fields: 'nextPageToken, files(id, name)',
-            pageSize: 15,
+            pageSize: 1,
             q: "name='" + name + "'",
         }, function(err, res) {
             if (err) {
@@ -172,7 +173,7 @@ async function getAppDataFolderName(accessToken, name){
                 //console.error(err);
                 reject(err)
               } else {
-                    //console.log("File", res.data.files.length)
+                    console.log("File", res.data.files.length) 
                     //if(true){
                     if(res.data.files.length <= 0){
                         deleteAllAppDataFolder(accessToken)
@@ -190,7 +191,7 @@ async function getAppDataFolderName(accessToken, name){
                     } else {
                         getAppDataFolderID(drive, res.data.files[0].id)
                         .then(res => {
-                            //console.log('holi json 1', res) 
+                            console.log('holi json 1', res) 
                             resolve(res)
                         })
                         .catch(err => {
@@ -225,7 +226,9 @@ async function replaceDrivewithLocal(accessToken){
                 reject(err)
             } else {
                 res.data.files.forEach(function (file) {
-                        
+                    sleep().then(res => {
+
+                    })
                     deleteAppDataFolder(drive, file.id).catch(err => {
                         reject('errorbbb', err)
                     })
@@ -270,7 +273,6 @@ async function deleteAllAppDataFolder(accessToken){
                 } else {
                     //console.log("size: ", res.data.files.length)
                     res.data.files.forEach(function (file) {
-                        
                         deleteAppDataFolder(drive, file.id).catch(err => {
                             reject('errorbbb', err)
                         })
@@ -284,6 +286,7 @@ async function deleteAllAppDataFolder(accessToken){
 }
 async function deleteAppDataFolder(drive, id){
     console.log('deleteAppDataFolder')
+    await sleep()
     const promise = new Promise((resolve, reject) => {
         drive.files.delete({
             fileId: id,
@@ -322,7 +325,7 @@ async function reemplazarAllBDConFriveFiles(db, accessToken){
         pageSize: 15,
     })
     d.data.files.forEach(f => {
-        switch(f.name.substring(0, f.name.length - 5)){
+        switch(f.name){
             case('AccountsMoneda'):
                 f.order = 20
                 break
@@ -376,7 +379,7 @@ async function reemplazarAllBDConFriveFiles(db, accessToken){
     console.log('delete continue')
     const queries = []
     for(i = 0; i < d.data.files.length; i++){
-        const name = d.data.files[i].name.substring(0, d.data.files[i].name.length - 5)
+        const name = d.data.files[i].name
 
         console.log('table: ', name)
         data[i].forEach(element =>{
@@ -402,7 +405,7 @@ async function reemplazarAllBDConFriveFiles(db, accessToken){
         var stmt
         for(i = 0; i < queries.length; i ++){
         //queries.forEach((q) => {
-            //console.log('1a')
+            console.log('1a, ', queries[i])
             stmt = db.prepare(queries[i])
             var a = stmt.run()
             stmt.finalize()
@@ -412,7 +415,8 @@ async function reemplazarAllBDConFriveFiles(db, accessToken){
             console.log('erro2', err)
             db.close()
     })
-    
+    db.close()
+    console.log("a1")
     
 }
 function deleteTables(db){
@@ -447,7 +451,7 @@ function deleteTables(db){
     //)
 }
 function sleep() {
-    return new Promise(resolve => setTimeout(resolve, 65));
+    return new Promise(resolve => setTimeout(resolve, 115));
 }
 async function asyncForEach(array, callback) {
     for (let index = 0; index < array.length; index++) {

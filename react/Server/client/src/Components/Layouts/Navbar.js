@@ -24,8 +24,6 @@ class Navbar extends Component{
         }
     }
     render(){
-        console.log('Navbar')
-        console.log('props', this.props)
         const divStyle = {
             position: 'fixed',
           };
